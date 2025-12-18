@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Real Media Uploader - Unggah & Download File</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* [CSS tetap sama seperti sebelumnya] */
         * {
             margin: 0;
             padding: 0;
@@ -1118,13 +1118,16 @@
         File berhasil diunggah!
     </div>
 
+    <!-- Load Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    
     <script>
-        // Konfigurasi Supabase
+        // Konfigurasi Supabase - DIPINDAH ke sini setelah library dimuat
         const SUPABASE_URL = 'https://pkkvvxblbprgnoqeukly.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBra3Z2eGJsYnByZ25vcWV1a2x5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMzEwMzEsImV4cCI6MjA4MTYwNzAzMX0.J4aAwQyV5ARMX-0eo3HZpzpqWpezd0M3k7wmiHUHAgQ';
         
         // Inisialisasi Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase; // Deklarasi tanpa inisialisasi langsung
         
         // Konstanta
         const BUCKET_NAME = 'uploads';
@@ -1374,11 +1377,6 @@
                         const { data: urlData } = supabase.storage
                             .from(BUCKET_NAME)
                             .getPublicUrl(file.name);
-                        
-                        // Dapatkan metadata tambahan
-                        const { data: metadata } = await supabase.storage
-                            .from(BUCKET_NAME)
-                            .download(file.name);
                         
                         return {
                             id: file.name,
@@ -2040,6 +2038,9 @@
         // Inisialisasi ketika halaman dimuat
         document.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Inisialisasi Supabase client - HANYA SETELAH library dimuat
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
                 // Update status Supabase
                 await updateSupabaseStatus();
                 
